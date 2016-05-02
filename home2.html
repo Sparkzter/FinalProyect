@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/png" sizes="16x16" href="img/logo_icon.png">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>A New Hope</title>
+        <link href="css/style.css" type="text/css" rel="stylesheet"/>
+        <script src="js/jquery-1.11.3.min.js" type="text/javascript"></script>
+        <script src="js/visualScript.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="main">
+
+            <div id="header">
+                <img id="logoHeader" src="img/logo.png"> 
+            </div >
+			
+            <div class="tabContainer">
+				<div class="navTab" style="width: 150px; display: table-cell;" id="home">Home</div>
+                <div class="navTab" style="width: 150px; display: table-cell;" id="AboutDis">About Dissorders</div>
+                <div class="navTab" style="width: 150px; display: table-cell;" id="supporting">Supporting Affected</div>
+				<div class="navTab" style="width: 150px; display: table-cell;" id="comments">Comments</div>
+                <div class="navTab" style="width: 150px; display: table-cell;" id="Meetings">Meetings</div>
+                <div class="navTab" style="width: 150px; display: table-cell;" id="MyMeetings">My Meetings</div>
+                <div class="navTab" style="width: 150px; display: table-cell;" id="logout">Logout, <span id="userLogout">[USER]<span>?</div>
+            </div>
+            
+
+            <div id="section">
+                <div class="contentTab" id="homeTab" style="width:60%;margin:auto;">
+                    <h2 style="text-align:center;">Welcome, to your new LIFE!</h2>
+                    <p>
+                        You feel that no one understands that the world choking you, you just want to disappear and leave no trace in this world of yours. 
+						Believe us you're not the only person who suffers and feels that way, you are not alone and here find people like you who thought 
+						that there was no solution for the world, but together we have gained a new life, full of future, joy and health both physically 
+						and mentally.
+                    </p>
+                    <p>
+                        If you reached this place, believe us your search has come to an end and you can finally find the peace that both have been looking 
+						for, we are a network dedicated to the treatment of various mental conditions, to support these for both the patient and family and 
+						people nearby. We know that these things are not easy, but we are convinced that together we will succeed no matter what.
+                    </p>
+                    <h2 style="text-align:center;">So go on, what are you waiting for. Are you ready to start to changing <i>YOUR</i> life!</h2>
+                </div>
+				
+				<div class="contentTab" id="AboutDisTab">
+					<div id="DissorderSpace">
+                    </div>
+                </div>
+				
+				<div class="contentTab" id="SupportTab">
+					<div id="SupportSpace">
+                    </div>
+                </div>
+				
+				<div class="contentTab" id="CommentTab">
+					<div id="CommentPage">
+						<form>
+							<fieldset>
+								<legend>Comments</legend>
+								<div id="logComments">
+									
+								</div>
+							
+							</fieldset>
+							<fieldset>
+								<legend>Post your comments</legend>
+								<div id="commentBox">
+									<table>
+                                        <tr>
+                                            <td>Username:</td>
+											<td><input id="commentUsername"/></td>
+											<td><span class="Error" id="errorMessageUName"></td>
+                                        </tr>
+										<tr>
+                                            <td>Comment:</td>
+											<td><textarea id="theComment"rows="6" cols="22"></textarea></td>
+											<td><span class="Error" id="errorMessageComment"></td>
+                                        </tr>
+                                    </table>
+									<p>
+									<input id="PComent" type="submit" value="Post Comment"/>
+									</p>
+								</div>
+							</fieldset>
+						</form>
+                    </div>
+                </div>
+				
+				<div class="contentTab" id="MeetingTab">
+					<div id="MeetingPage">
+					<fieldset>
+							<legend>Meetings </legend>
+								<div id="logMeeting">
+									
+								</div>
+						</fieldset>
+						<fieldset>
+								<legend>Organize new Meeting</legend>
+								<div id="commentBox">
+									<table>
+                                        <tr>
+                                            <td>Name of meeting:</td>
+											<td><input id="meetingName"/></td>
+											<td><span class="Error" id="errorMessageUName"></td>
+                                        </tr>
+										<tr>
+                                            <td>Date:</td>
+											<td><input id="meetingDate"></td>
+											<td><span class="Error" id="errorMessageComment"></td>
+                                        </tr>
+										<tr>
+                                            <td>Place:</td>
+											<td><input id="meetingPlace"></td>
+											<td><span class="Error" id="errorMessageComment"></td>
+                                        </tr>
+										<tr>
+                                            <td>Extra Information:</td>
+											<td><input id="meetingExtra"></td>
+											<td><span class="Error" id="errorMessageComment"></td>
+                                        </tr>
+                                    </table>
+									<p>
+									<input id="PNewMeet" type="submit" value="Post New Meeting"/>
+									</p>
+								</div>
+							</fieldset>
+                    </div>
+                </div>
+				
+				<div class="contentTab" id="MyMeetingTab">
+					<div id="MeetingPage">
+					<fieldset>
+							<legend>Meetings </legend>
+								<div id="logMyMeeting">
+									
+								</div>
+						</fieldset>
+                    </div>
+                </div>
+				
+            </div>
+
+            <div id="footer">Copyright © A New Hope 2016</div>
+        <div>
+    </body>
+    <script type="text/javascript">
+        $( document ).on('ready', function() {
+            validateUserSession();
+			
+			$.ajax({
+				url: "data/applicationLayer.php",
+				type: "POST",
+				data: {'action':'LOADCOMMENTS'},
+				dataType: "json",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(jsonObject){
+					var newComments = ""
+					
+					for (var i = 0; i < jsonObject.length; i++){
+						newComments += "<span class=" + "comment" +">Username: "+ jsonObject[i].username 
+											 + "<br>Comment: " + jsonObject[i].userComment + "</span></p>";
+					}
+					$("#logComments").append(newComments);
+				},
+				error: function(errorMsg){
+					alert(errorMsg);
+				}
+			});
+			
+			$.ajax({
+				url: "data/applicationLayer.php",
+				type: "POST",
+				data: {'action':'LOADMEETINGS'},
+				dataType: "json",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(jsonObject){
+					var meetingTable = "<table id='MeetingTable' class ='TableMeeting'><tr><th>Meeting Name</th><th>Date</th><th>Place</th><th>Extra Information</th><th>Attendance</th></tr>";
+					
+					for (var i = 0; i < jsonObject.length; i++){
+						meetingTable += "<tr><td>"+jsonObject[i].meetName+"</td><td>"+jsonObject[i].fecha+"</td><td>"+jsonObject[i].place+"</td><td>"+jsonObject[i].extrainfo+"</td>";
+						meetingTable +=	"<td><input type= 'submit' class= 'buttonStyle' id= '"+jsonObject[i].meetName+"' value = 'Add Meetings'></td></tr>";
+					}
+					meetingTable+= "</table></p>";
+					$("#logMeeting").append(meetingTable);
+				},
+				error: function(errorMsg){
+					alert(errorMsg);
+				}
+			});
+			
+			$("#PComent").on("click", function(){
+			
+				var dataToSend = { "action": "NEWCOMMENT",
+								   "commentU": $("#commentUsername").val(),
+								   "comment": $("#theComment").val()
+								};
+				$.ajax({
+					url: "data/applicationLayer.php",
+					type: "POST",
+					data: dataToSend,
+					dataType: "json",
+					contentType: "application/x-www-form-urlencoded",
+					success: function(jsonObject){
+						alert("Your comment was posted with success" + jsonObject.uName);
+						
+					},
+					error: function(errorMsg){
+						alert(errorMsg);
+					}
+				});
+			});
+			
+			$("#PNewMeet").on("click",function(){
+				var dataToSend = {	"action" : "NEWMEETING",
+									"name" : $("#meetingName").val(),
+									"place": $("#meetingPlace").val(),
+									"date": $("#meetingDate").val(),
+									"extra": $("#meetingExtra").val()
+								};
+				$.ajax({
+					url: "data/applicationLayer.php",
+					type: "POST",
+					data: dataToSend,
+					dataType: "json",
+					contentType: "application/x-www-form-urlencoded",
+					success: function(jsonObject){
+						alert("Your meeting was created with success");
+						location.reload();
+					},
+					error: function(errorMsg){
+						alert(errorMsg);
+					}
+				});
+			});
+			
+			$(document).on("click", ".buttonStyle", function(){
+				var ButtonID = $(this).attr('id');
+				var dataToSend = {  "action": "ADDMEETING",
+									"event": ButtonID
+								};
+				$.ajax({
+					url: "data/applicationLayer.php",
+					type: "POST",
+					data: dataToSend,
+					dataType: "json",
+					contentType: "application/x-www-form-urlencoded",
+					success: function(jsonObject){
+						alert("Your meeting was adding");
+					},
+					error: function(errorMsg){
+						alert(errorMsg);
+					}
+				});
+			});
+			
+			$.ajax({
+				url: "data/applicationLayer.php",
+				type: "POST",
+				data: {'action':'LOADMYMEETINGS'},
+				dataType: "json",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(jsonObject){
+					var meetingTable = "<table id='MyMeetingTable' class ='TableMeeting'><tr><th>Meeting Name</th><th>Date</th><th>Place</th><th>Extra Information</th></tr>";
+					var i = 0;
+					for (i = 0; i < jsonObject.length; i++){
+						meetingTable += "<tr><td>"+jsonObject[i].mname+"</td><td>"+jsonObject[i].fecha+"</td><td>"+jsonObject[i].place+"</td><td>"+jsonObject[i].extrainfo+"</td></tr>";
+					}
+					
+					meetingTable+= "</table></p>";
+					$("#logMyMeeting").append(meetingTable);
+				},
+				error: function(errorMsg){
+					alert(errorMsg);
+				}
+			});
+			
+		});
+           		
+    </script>
+
+</html>

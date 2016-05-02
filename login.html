@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/png" sizes="16x16" href="img/logo_icon.png">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>A New Hope</title>
+        <link href="css/style.css" type="text/css" rel="stylesheet"/>  
+        <script src="js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="main">
+            <div id="header">
+                <img id="logoHeader" src="img/logo.png"> 
+            </div >
+        <div>
+    	<div id="mainContainer">
+            <div id="loginContainer" style="padding:10px;display:block;margin: auto;">
+	            <fieldset>
+		            <div id="loginOptions" style="width:17%;margin: auto;">
+		                <p>
+		                    Username <br/>
+		                    <input id="userName" class="formElement" type="text" />
+		                </p>
+		                <p>
+		                    Password<br/>
+		                    <input id="userPassword" class="formElement" type="password" />
+		                </p>   
+                        <p>
+                            <input type="checkbox" name="rememberData" value="remember" id="rememberData">Remember me<br>
+                        </p>
+		                <div id="buttonOptions">
+		                    <input type="button" id="loginButton" value="Login" class="loginStyle"/>
+		                    <input type="button" id="registerButton" value="Register" class="loginStyle"/>
+                            <input type="button" id="returnHome" value="Later" class="loginStyle"/>
+		                </div>      
+		            </div>
+	        	</fieldset>
+	        </div>
+            <div id="footer">Copyright © A New Hope 2016</div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $( document ).on('ready', function() {
+            // Setting the action to get user cookies if they exist
+            $.ajax({
+                type: "POST",
+                url: "data/applicationLayer.php",
+                dataType: "json",
+                data: {'action':'COOKIE'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success: function(jsonData) {
+                    $("#userName").val(jsonData.cookieUserName);
+                },
+                error: function(errorMsg){
+                    console.log(errorMsg.statusText);
+                }
+            });
+
+            // Setting the action to the login button (Redirect to home.html if the credentials are valid)
+            $('#loginButton').on('click', function(){
+                if( $('#userName').val() == "" ){
+                    alert("Please enter an username.");
+                }
+                else if( $('#userPassword').val() == "" ){
+                    alert("Please enter a password.");
+                }
+                else{
+                    var jsonObject = {
+                        'userName' : $('#userName').val(),
+                        'userPassword' : $('#userPassword').val(),
+                        'rememberData' : $('#rememberData').is(':checked'),
+                        'action' : 'LOGIN'
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'data/applicationLayer.php',
+                        dataType: 'json',
+                        data: jsonObject,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        success: function(jsonData) {
+                            alert("Succesfully logged in. Redirecting to home...");
+                            window.location.replace('home2.html');
+                        },
+                        error: function(errorMsg){
+                            alert(errorMsg.statusText);
+                        }
+                    }); 
+                }        
+           });
+
+           // Setting the action to the registration button (Redirecto to registration.html)
+            $('#registerButton').on('click', function(){
+                window.location.replace('registration.html');
+            }); 
+
+            $('#returnHome').on('click', function(){
+                window.location.replace('home.html');
+            }); 
+        });
+    </script>
+</html>

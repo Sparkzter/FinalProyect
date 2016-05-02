@@ -1,0 +1,52 @@
+<div style="width:70%;margin:auto;">
+	<form>
+	    <fieldset>
+	        <legend>Email us</legend>
+	        <table>
+	            <tr>
+	                <td>Name:</td><td><input type="text" id="commentName"/><label id="hint"> </label></td>
+	            </tr>
+	            <tr>
+	                <td>Email:</td><td><input type="email" id="commentEmail"/></td>
+	            </tr>
+	            <tr>
+	                <td>Comment:</td><td><textarea id="theComment"></textarea></td>
+	            </tr>
+	        </table>
+	        <div style="text-align:center;">
+	        	<input type="button" id="comment" value="Comment" class="itemCartModify"/>
+	        </div>
+	    </fieldset>
+	</form>
+</div>
+<script>
+	$( document ).on('ready', function() {
+        $('comment').on('click', function(){
+			
+			name = $('#hint').val();
+			email = $('#commentEmail').val();
+			comm = $('#theComment').val();
+			
+			jsonObject = {
+					'name'	: name,
+					'email'	: email,
+					'comm'	: comm,
+					'action': 'REGISTER'
+					};
+			
+			$.ajax({
+				type: 'POST',
+				url: 'data/applicationLayer.php',
+				dataType: 'json',
+				data: jsonObject,
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				success: function(jsonData) {
+					alert("Thanks for your comments!");   
+				},
+				error: function(errorMsg){
+					alert(errorMsg.statusText);
+				}
+			});
+		});
+    });
+</script>
